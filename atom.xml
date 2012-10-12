@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[The QCoach Dev Notes]]></title>
+  <link href="http://notes.qcoach.com/atom.xml" rel="self"/>
+  <link href="http://notes.qcoach.com/"/>
+  <updated>2012-10-12T18:12:30+02:00</updated>
+  <id>http://notes.qcoach.com/</id>
+  <author>
+    <name><![CDATA[Kornelije Sajler]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Connecting the ASP.NET Web Api with SQL Azure]]></title>
+    <link href="http://notes.qcoach.com/blog/2012/10/12/connecting-the-asp-dot-net-web-api-with-sql-azure/"/>
+    <updated>2012-10-12T17:56:00+02:00</updated>
+    <id>http://notes.qcoach.com/blog/2012/10/12/connecting-the-asp-dot-net-web-api-with-sql-azure</id>
+    <content type="html"><![CDATA[
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/4e0d581521137646abac17331917e95e" alt="Kornelije Sajler" />
+	</div>
+
+	<div class="author-about">
+		<h3>Kornelije Sajler</h3>
+		<p>The Lead Software Developer at Qualtrak</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/xajler">@xajler</a>
+			</li>
+			
+			
+			<li>
+			<a href="http://blog.metaintellect.com/">Blog</a>
+			</li>
+			
+		</ul>
+	</div>
+</div>
+]]></content>
+  </entry>
+  
+</feed>

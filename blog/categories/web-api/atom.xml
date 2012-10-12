@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Web Api | The QCoach Dev Notes]]></title>
+  <link href="http://notes.qcoach.com/blog/categories/web-api/atom.xml" rel="self"/>
+  <link href="http://notes.qcoach.com/"/>
+  <updated>2012-10-12T18:12:30+02:00</updated>
+  <id>http://notes.qcoach.com/</id>
+  <author>
+    <name><![CDATA[Kornelije Sajler]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Connecting the ASP.NET Web Api with SQL Azure]]></title>
+    <link href="http://notes.qcoach.com/blog/2012/10/12/connecting-the-asp-dot-net-web-api-with-sql-azure/"/>
+    <updated>2012-10-12T17:56:00+02:00</updated>
+    <id>http://notes.qcoach.com/blog/2012/10/12/connecting-the-asp-dot-net-web-api-with-sql-azure</id>
+    <content type="html"><![CDATA[
+]]></content>
+  </entry>
+  
+</feed>
