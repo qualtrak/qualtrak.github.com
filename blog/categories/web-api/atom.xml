@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Web Api | The QCoach Dev Notes]]></title>
   <link href="http://qualtrak.github.com/blog/categories/web-api/atom.xml" rel="self"/>
   <link href="http://qualtrak.github.com/"/>
-  <updated>2012-10-14T19:00:07+02:00</updated>
+  <updated>2012-10-14T19:01:57+02:00</updated>
   <id>http://qualtrak.github.com/</id>
   <author>
     <name><![CDATA[Kornelije Sajler]]></name>
@@ -33,7 +33,7 @@
 <li>Specify <code>collation</code> or leave default.</li>
 <li><p>Specify <code>sorver</code>: existing or creta new one.</p>
 
-<p><img src="/images/blog/01-01.png"></p></li>
+<p><img src="/images/01-01.png"></p></li>
 </ul>
 </li>
 </ol>
