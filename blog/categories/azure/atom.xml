@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Azure | The QCoach Dev Notes]]></title>
   <link href="http://qualtrak.github.com/blog/categories/azure/atom.xml" rel="self"/>
   <link href="http://qualtrak.github.com/"/>
-  <updated>2012-10-12T18:30:16+02:00</updated>
+  <updated>2012-10-14T18:37:17+02:00</updated>
   <id>http://qualtrak.github.com/</id>
   <author>
     <name><![CDATA[Kornelije Sajler]]></name>
@@ -18,7 +18,26 @@
     <link href="http://qualtrak.github.com/blog/2012/10/12/connecting-the-asp-dot-net-web-api-with-sql-azure/"/>
     <updated>2012-10-12T17:56:00+02:00</updated>
     <id>http://qualtrak.github.com/blog/2012/10/12/connecting-the-asp-dot-net-web-api-with-sql-azure</id>
-    <content type="html"><![CDATA[
+    <content type="html"><![CDATA[<h2>Creating SQL Azure</h2>
+
+<ol>
+<li>Login to a <a href="https://manage.windowsazure.com">Windows Azure Portal</a>.</li>
+<li>In left pane cluck <em>SQL Database</em>.</li>
+<li>In bottom command menu click <em>Add</em>.</li>
+<li>In <em>Specify database settings</em> popup:
+
+<ul>
+<li>Add wanted <code>name</code> of database.</li>
+<li>Specify <code>edition</code>: <em>Web</em> or <em>Business</em>.</li>
+<li>Specify <code>limit database size</code> depending on edition (affects billing).</li>
+<li>Specify <code>collation</code> or leave default.</li>
+<li><p>Specify <code>sorver</code>: existing or creta new one.</p>
+
+<p><img src="/images/blog/01-01.png"></p></li>
+</ul>
+</li>
+</ol>
+
 ]]></content>
   </entry>
   
