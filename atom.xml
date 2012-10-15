@@ -4,7 +4,7 @@
   <title><![CDATA[The QCoach Dev Notes]]></title>
   <link href="http://qualtrak.github.com/atom.xml" rel="self"/>
   <link href="http://qualtrak.github.com/"/>
-  <updated>2012-10-15T02:09:13+02:00</updated>
+  <updated>2012-10-15T19:24:13+02:00</updated>
   <id>http://qualtrak.github.com/</id>
   <author>
     <name><![CDATA[Kornelije Sajler]]></name>
@@ -18,7 +18,15 @@
     <link href="http://qualtrak.github.com/blog/2012/10/12/connecting-the-asp-dot-net-web-api-with-sql-azure/"/>
     <updated>2012-10-12T17:56:00+02:00</updated>
     <id>http://qualtrak.github.com/blog/2012/10/12/connecting-the-asp-dot-net-web-api-with-sql-azure</id>
-    <content type="html"><![CDATA[<h2>Creating SQL Azure</h2>
+    <content type="html"><![CDATA[<p>The step-by-step creation of ASP.NET MVC Web Api  <em>RestApiAzure</em> application.</p>
+
+<p>The full code is hosted on github as <a href="https://github.com/qualtrak/RestApiAzure">qualtrak/RestApiAzure</a>.
+Each commited step will be as note and link to particular changeset.</p>
+
+<p>This is mostly learning by doing process so comments, suggestions, different opinions, and
+code reviews for Github commits are very welcome!</p>
+
+<h2>Creating SQL Azure</h2>
 
 <ol>
 <li>Login to a <a href="https://manage.windowsazure.com">Windows Azure Portal</a>.</li>
@@ -31,7 +39,7 @@
 <li>Specify <code>edition</code>: <em>Web</em> or <em>Business</em>.</li>
 <li>Specify <code>limit database size</code> depending on edition (affects billing).</li>
 <li>Specify <code>collation</code> or leave default.</li>
-<li><p>Specify <code>server</code>: existing or creta new one.</p>
+<li><p>Specify <code>server</code>: existing or create new one.</p>
 
 <p><img src="http://qualtrak.github.com/images/01-01.png"></p></li>
 </ul>
@@ -42,12 +50,12 @@
 <h2>Configure Allowed IP addresses of SQL Azure</h2>
 
 <p>To properly connect to the SQL Azure from the client (your PC) there is need to add the
-IP address to allowed ip addresses.</p>
+IP address to allowed IP addresses.</p>
 
 <p>In <a href="https://manage.windowsazure.com">Windows Azure Portal</a> <em>SQL databases</em> click the
 <em>Servers</em> link, right below title &#8221;<em>sql databases</em>&#8221;.</p>
 
-<p>From list of <em>Servers</em> click on created or exsting Server that created dtabase is part.
+<p>From list of <em>Servers</em> click on created or existing Server that created database is part.
 In this case it was <code>qh9pkltozj</code> server.</p>
 
 <p><img src="http://qualtrak.github.com/images/01-02.png"></p>
@@ -59,12 +67,12 @@ with the action <em>add to allowed IP addresses</em>.</p>
 
 <p><img src="http://qualtrak.github.com/images/01-03.png"></p>
 
-<p>Click action <em>add to allowed IP addresses</em> to gain access to the SQL Azure dataabase(s) on
+<p>Click action <em>add to allowed IP addresses</em> to gain access to the SQL Azure database(s) on
 <code>qh9pkltozj</code> server.</p>
 
-<p>In bottom command menu click <em>Save</em> to save firewal rule.</p>
+<p>In bottom command menu click <em>Save</em> to save firewall rule.</p>
 
-<p>The SQL Azure is now ready to be connected from client (your PC) with SQL Server Mnagement Studio (SSMS)
+<p>The SQL Azure is now ready to be connected from client (your PC) with SQL Server Management Studio (SSMS)
 or via connection string from local application.</p>
 
 <h2>Create ASP.NET MVC Web Api project</h2>
@@ -82,7 +90,7 @@ or via connection string from local application.</p>
 
 
 <p> <img src="http://qualtrak.github.com/images/01-04.png"></p></li>
-<li>Right-click <code>RestApiAzure</code> in te <em>Solution Explorer</em>, <em>Add</em> | <em>New Project</em>.</li>
+<li>Right-click <code>RestApiAzure</code> in the <em>Solution Explorer</em>, <em>Add</em> | <em>New Project</em>.</li>
 <li>Choose from <em>Visual C#</em> | <em>Web</em> the <em>ASP.NET MVC 4 Web Application</em>:
 
 <ul>
@@ -101,6 +109,713 @@ or via connection string from local application.</p>
 </li>
 </ol>
 
+
+<blockquote> Github qualtrak/RestApiAzure commit:
+<br/>
+<a href="https://github.com/qualtrak/RestApiAzure/commit/ae5d9994a4c5694675f981341b1b6e55cfb3bba5" target="_blank">
+Initial commit. Default empty Web Api solution with README.</a>
+</blockquote>
+
+
+<h2>Create POCO models: Account and Tenant</h2>
+
+<p>The simple two models Account and Tenant (Tenant belongs to Account).</p>
+
+<ul>
+<li>In <code>RestApiWeb.Models</code> create <code>Account.cs</code> class:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">namespace</span> <span class="nn">RestApiWeb.Models</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">Account</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">public</span> <span class="n">Guid</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">string</span> <span class="n">Email</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsActive</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>In <code>RestApiWeb.Models</code> create <code>Tenant.cs</code> class:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">namespace</span> <span class="nn">RestApiWeb.Models</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">Tenant</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">public</span> <span class="n">Guid</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">int</span> <span class="n">Code</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">string</span> <span class="n">Description</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsActive</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="n">Guid</span> <span class="n">AccountId</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="n">Account</span> <span class="n">Account</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<blockquote> Github qualtrak/RestApiAzure commit:
+<br/>
+<a href="https://github.com/qualtrak/RestApiAzure/commit/cdddf56734624342c646c899c369d536891cf4fc" target="_blank">
+Created Models: Account and Tenant.</a>
+</blockquote>
+
+
+<h2>Create the &#8220;RestApiAzure&#8221; Db Context</h2>
+
+<p>Create <code>RestApiWeb.Context</code> folder and <code>RestApiAzureContext.cs</code> class as a <em>Entity Framework</em>
+<code>DbContext</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">namespace</span> <span class="nn">RestApiWeb.Context</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">RestApiWeb.Models</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">System.Data.Entity</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">RestApiAzureContext</span> <span class="p">:</span> <span class="n">DbContext</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">public</span> <span class="nf">RestApiAzureContext</span><span class="p">()</span>
+</span><span class='line'>            <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="s">&quot;RestApiAzure&quot;</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="n">DbSet</span><span class="p">&lt;</span><span class="n">Account</span><span class="p">&gt;</span> <span class="n">Accounts</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="n">DbSet</span><span class="p">&lt;</span><span class="n">Tenant</span><span class="p">&gt;</span> <span class="n">Tenants</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The connection string name &#8220;RestApiAzure&#8221; is declared in <code>base</code>. This connection string
+will be created in <code>web.config</code> in next chapter.</p>
+
+<blockquote> Github qualtrak/RestApiAzure commit:
+<br/>
+<a href="https://github.com/qualtrak/RestApiAzure/commit/9994d211bfae7b46c7c929aa879f675abc1a764b" target="_blank">
+Created RestApiAzure Entity Framework Context.</a>
+</blockquote>
+
+
+<h2>Adding SQL Azure connecting string to web.config</h2>
+
+<ul>
+<li>Login to a <a href="https://manage.windowsazure.com">Windows Azure Portal</a>.</li>
+<li>In left pane cluck <em>SQL Database</em>.</li>
+<li>Click the database that you want connection string, in this case <code>qcoach</code> t get details of database.</li>
+<li>From right <em>quick glance</em> sidebar click on <em>Show connection strings</em>.</li>
+</ul>
+
+
+<p><img src="http://qualtrak.github.com/images/01-06.png"></p>
+
+<ul>
+<li>In Visual Studio project <code>RestApiWeb</code> open <code>web.config</code> and add a  <code>&lt;connectionStrings&gt;</code> named <em>RestApiAzure</em>:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;add</span> <span class="na">name=</span><span class="s">&quot;RestApiAzure&quot;</span>
+</span><span class='line'>     <span class="na">providerName=</span><span class="s">&quot;System.Data.SqlClient&quot;</span>
+</span><span class='line'>     <span class="na">connectionString=</span><span class="s">&quot;Server=qh9pkltozj.database.windows.net,1433;Database=qcoach;User ID=xajler@qh9pkltozj;Password=abc123$%;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;&quot;</span><span class="nt">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<blockquote> Github qualtrak/RestApiAzure commit:
+<br/>
+<a href="https://github.com/qualtrak/RestApiAzure/commit/a3c3216d837057613d2d0cee75c7c8bb0beaaaa2" target="_blank">
+Added SQL Azure connection string to web.config.</a>
+</blockquote>
+
+
+<h2>Create Migration for Account and Tenant, added seeded data and create schema</h2>
+
+<ul>
+<li>Open <code>Package Manager Console</code> (<em>View</em> | <em>Other Windows</em>).</li>
+<li>Enable migrations with:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>PM&gt; Enable-Migrations
+</span><span class='line'>Checking if the context targets an existing database...
+</span><span class='line'>Code First Migrations enabled for project RestApiWeb.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>There should be new folder <code>RestApiWeb.Migrations</code> with <code>Configuration.cs</code> class and <code>Seed</code> method.</li>
+<li>Replace the default commented code in <code>Seed</code> method with:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">Seed</span><span class="p">(</span><span class="n">RestApiWeb</span><span class="p">.</span><span class="n">Context</span><span class="p">.</span><span class="n">RestApiAzureContext</span> <span class="n">context</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">Account</span> <span class="n">account</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Account</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="n">Guid</span><span class="p">.</span><span class="n">NewGuid</span><span class="p">(),</span> <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;Account One&quot;</span><span class="p">,</span> <span class="n">Email</span> <span class="p">=</span> <span class="s">&quot;xajler@gmail.com&quot;</span><span class="p">,</span> <span class="n">IsActive</span> <span class="p">=</span> <span class="k">true</span> <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">context</span><span class="p">.</span><span class="n">Accounts</span><span class="p">.</span><span class="n">AddOrUpdate</span><span class="p">(</span><span class="n">account</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">context</span><span class="p">.</span><span class="n">Tenants</span><span class="p">.</span><span class="n">AddOrUpdate</span><span class="p">(</span>
+</span><span class='line'>        <span class="k">new</span> <span class="n">Tenant</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="n">Guid</span><span class="p">.</span><span class="n">NewGuid</span><span class="p">(),</span> <span class="n">Code</span> <span class="p">=</span> <span class="m">1000</span><span class="p">,</span> <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;Tenant 1000&quot;</span><span class="p">,</span> <span class="n">Description</span> <span class="p">=</span> <span class="s">&quot;The Tenant Thousand&quot;</span><span class="p">,</span> <span class="n">Account</span> <span class="p">=</span> <span class="n">account</span> <span class="p">}</span>
+</span><span class='line'>    <span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>To <code>Seed</code> you&#8217;ll need the <code>using RestApiWeb.Models;</code> for Account and Tenant medel.</li>
+<li>If there is no <em>Initial Migration</em> created. Create migrations for Account and Tenant.</li>
+<li>In <code>Package Manager Console</code> start command to create Account and Tenant migration:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="n">PM</span><span class="p">&gt;</span> <span class="n">Add</span><span class="p">-</span><span class="n">Migration</span> <span class="n">InitialCreate</span>
+</span><span class='line'><span class="n">Scaffolding</span> <span class="n">migration</span> <span class="err">&#39;</span><span class="n">InitialCreate</span><span class="err">&#39;</span><span class="p">.</span>
+</span><span class='line'><span class="n">The</span> <span class="n">Designer</span> <span class="n">Code</span> <span class="k">for</span> <span class="k">this</span> <span class="n">migration</span> <span class="n">file</span> <span class="n">includes</span> <span class="n">a</span> <span class="n">snapshot</span> <span class="n">of</span> <span class="n">your</span> <span class="n">current</span> <span class="n">Code</span> <span class="n">First</span> <span class="n">model</span><span class="p">.</span> <span class="n">This</span> <span class="n">snapshot</span> <span class="k">is</span> <span class="n">used</span> <span class="n">to</span> <span class="n">calculate</span> <span class="n">the</span> <span class="n">changes</span> <span class="n">to</span> <span class="n">your</span> <span class="n">model</span> <span class="n">when</span> <span class="n">you</span> <span class="n">scaffold</span> <span class="n">the</span> <span class="n">next</span> <span class="n">migration</span><span class="p">.</span> <span class="n">If</span> <span class="n">you</span> <span class="n">make</span> <span class="n">additional</span> <span class="n">changes</span> <span class="n">to</span> <span class="n">your</span> <span class="n">model</span> <span class="n">that</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">include</span> <span class="k">in</span> <span class="k">this</span> <span class="n">migration</span><span class="p">,</span> <span class="n">then</span> <span class="n">you</span> <span class="n">can</span> <span class="n">re</span><span class="p">-</span><span class="n">scaffold</span> <span class="n">it</span> <span class="n">by</span> <span class="n">running</span> <span class="err">&#39;</span><span class="n">Add</span><span class="p">-</span><span class="n">Migration</span> <span class="m">201210151549095</span><span class="n">_InitialCreate</span><span class="err">&#39;</span> <span class="n">again</span><span class="p">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>In Migration folder now it should be a <code>201210151549095_InitialCreate.cs</code> migration file.</li>
+<li>In <code>Package Manager Console</code> run:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="n">PM</span><span class="p">&gt;</span> <span class="n">Update</span><span class="p">-</span><span class="n">Database</span>
+</span><span class='line'><span class="n">Specify</span> <span class="n">the</span> <span class="err">&#39;</span><span class="p">-</span><span class="n">Verbose</span><span class="err">&#39;</span> <span class="n">flag</span> <span class="n">to</span> <span class="n">view</span> <span class="n">the</span> <span class="n">SQL</span> <span class="n">statements</span> <span class="n">being</span> <span class="n">applied</span> <span class="n">to</span> <span class="n">the</span> <span class="n">target</span> <span class="n">database</span><span class="p">.</span>
+</span><span class='line'><span class="n">Applying</span> <span class="n">code</span><span class="p">-</span><span class="n">based</span> <span class="n">migrations</span><span class="p">:</span> <span class="p">[</span><span class="m">201210151549095</span><span class="n">_InitialCreate</span><span class="p">].</span>
+</span><span class='line'><span class="n">Applying</span> <span class="n">code</span><span class="p">-</span><span class="n">based</span> <span class="n">migration</span><span class="p">:</span> <span class="m">201210151549095</span><span class="n">_InitialCreate</span><span class="p">.</span>
+</span><span class='line'><span class="n">Running</span> <span class="n">Seed</span> <span class="n">method</span><span class="p">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Connect with SQL Server Management Studio to SQL Azure and you should get Accounts and Tenants tables.</li>
+</ul>
+
+
+<p><img src="http://qualtrak.github.com/images/01-07.png"></p>
+
+<blockquote> Github qualtrak/RestApiAzure commit:
+<br/>
+<a href="https://github.com/qualtrak/RestApiAzure/commit/7a345c8be4602d0bcbb49444259189adcfb8b886" target="_blank">
+Enabled Migrations and created initial Migration with Seeded data.</a>
+</blockquote>
+
+
+<h2>Creating Wep Api Controllers</h2>
+
+<p>We will create full CRUD (Create-Read-Update-Delete) api for Accounts and Tenants resources.</p>
+
+<p><strong>Please note that you should never ever want have this kind of code in real application, this
+code is created only to test the Azure Cloud Services, and have as less as possible business
+logic and layer abstractions!!!</strong></p>
+
+<ul>
+<li><p>First delete the created by web api <code>Controllers.ValuesController.cs</code>.</p></li>
+<li><p>Create in <code>Controllers</code> folder the <code>AccountsController</code> and add the code:</p></li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">namespace</span> <span class="nn">RestApiWeb.Controllers</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">RestApiWeb.Context</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">RestApiWeb.Models</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">System.Diagnostics</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">System.Linq</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">System.Web.Http</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">AccountsController</span> <span class="p">:</span> <span class="n">ApiController</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">private</span> <span class="k">readonly</span> <span class="n">RestApiAzureContext</span> <span class="n">_context</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="nf">AccountsController</span><span class="p">()</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="k">this</span><span class="p">.</span><span class="n">_context</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RestApiAzureContext</span><span class="p">();</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Account</span><span class="p">&gt;</span> <span class="n">Get</span><span class="p">()</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">ICollection</span><span class="p">&lt;</span><span class="n">Account</span><span class="p">&gt;</span> <span class="n">result</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">Accounts</span><span class="p">.</span><span class="n">ToList</span><span class="p">();</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="n">Account</span> <span class="nf">Get</span><span class="p">(</span><span class="n">Guid</span> <span class="n">id</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">Account</span> <span class="n">result</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">Accounts</span><span class="p">.</span><span class="n">SingleOrDefault</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">id</span><span class="p">);</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="n">Account</span> <span class="nf">Post</span><span class="p">(</span><span class="n">Account</span> <span class="n">account</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="k">try</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="n">account</span><span class="p">.</span><span class="n">Id</span> <span class="p">=</span> <span class="n">Guid</span><span class="p">.</span><span class="n">NewGuid</span><span class="p">();</span>
+</span><span class='line'>                <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">Accounts</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">account</span><span class="p">);</span>
+</span><span class='line'>                <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">SaveChanges</span><span class="p">();</span>
+</span><span class='line'>                <span class="k">return</span> <span class="n">account</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="k">catch</span><span class="p">(</span><span class="n">Exception</span> <span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">exception</span><span class="p">.</span><span class="n">Message</span> <span class="p">+</span> <span class="s">&quot;\n\n&quot;</span> <span class="p">+</span> <span class="n">exception</span><span class="p">.</span><span class="n">StackTrace</span><span class="p">);</span>
+</span><span class='line'>                <span class="k">return</span> <span class="n">account</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="n">Account</span> <span class="nf">Put</span><span class="p">(</span><span class="n">Guid</span> <span class="n">id</span><span class="p">,</span> <span class="p">[</span><span class="n">FromBody</span><span class="p">]</span><span class="n">Account</span> <span class="n">account</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="k">try</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="n">Account</span> <span class="n">result</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">Accounts</span><span class="p">.</span><span class="n">SingleOrDefault</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">id</span><span class="p">);</span>
+</span><span class='line'>                <span class="n">result</span><span class="p">.</span><span class="n">Name</span> <span class="p">=</span> <span class="n">account</span><span class="p">.</span><span class="n">Name</span><span class="p">;</span>
+</span><span class='line'>                <span class="n">result</span><span class="p">.</span><span class="n">Email</span> <span class="p">=</span> <span class="n">account</span><span class="p">.</span><span class="n">Email</span><span class="p">;</span>
+</span><span class='line'>                <span class="n">result</span><span class="p">.</span><span class="n">IsActive</span> <span class="p">=</span> <span class="n">account</span><span class="p">.</span><span class="n">IsActive</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">SaveChanges</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">exception</span><span class="p">.</span><span class="n">Message</span> <span class="p">+</span> <span class="s">&quot;\n\n&quot;</span> <span class="p">+</span> <span class="n">exception</span><span class="p">.</span><span class="n">StackTrace</span><span class="p">);</span>
+</span><span class='line'>                <span class="k">return</span> <span class="n">account</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">bool</span> <span class="nf">Delete</span><span class="p">(</span><span class="n">Guid</span> <span class="n">id</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="k">try</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="n">Account</span> <span class="n">account</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">Accounts</span><span class="p">.</span><span class="n">SingleOrDefault</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">id</span><span class="p">);</span>
+</span><span class='line'>                <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">Accounts</span><span class="p">.</span><span class="n">Remove</span><span class="p">(</span><span class="n">account</span><span class="p">);</span>
+</span><span class='line'>                <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">SaveChanges</span><span class="p">();</span>
+</span><span class='line'>                <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">exception</span><span class="p">.</span><span class="n">Message</span> <span class="p">+</span> <span class="s">&quot;\n\n&quot;</span> <span class="p">+</span> <span class="n">exception</span><span class="p">.</span><span class="n">StackTrace</span><span class="p">);</span>
+</span><span class='line'>                <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Create in <code>Controllers</code> folder the <code>TenantsController</code> and add the code:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">namespace</span> <span class="nn">RestApiWeb.Controllers</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">RestApiWeb.Context</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">RestApiWeb.Models</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">System.Diagnostics</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">System.Linq</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">using</span> <span class="nn">System.Web.Http</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">TenantsController</span> <span class="p">:</span> <span class="n">ApiController</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">private</span> <span class="k">readonly</span> <span class="n">RestApiAzureContext</span> <span class="n">_context</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="nf">TenantsController</span><span class="p">()</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="k">this</span><span class="p">.</span><span class="n">_context</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RestApiAzureContext</span><span class="p">();</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Tenant</span><span class="p">&gt;</span> <span class="n">Get</span><span class="p">()</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">ICollection</span><span class="p">&lt;</span><span class="n">Tenant</span><span class="p">&gt;</span> <span class="n">result</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">Tenants</span><span class="p">.</span><span class="n">ToList</span><span class="p">();</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="n">Tenant</span> <span class="nf">Get</span><span class="p">(</span><span class="n">Guid</span> <span class="n">id</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">Tenant</span> <span class="n">result</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">Tenants</span><span class="p">.</span><span class="n">SingleOrDefault</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">id</span><span class="p">);</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="n">Tenant</span> <span class="nf">Post</span><span class="p">(</span><span class="n">Tenant</span> <span class="n">tenant</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="k">try</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="n">tenant</span><span class="p">.</span><span class="n">Id</span> <span class="p">=</span> <span class="n">Guid</span><span class="p">.</span><span class="n">NewGuid</span><span class="p">();</span>
+</span><span class='line'>                <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">Tenants</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">tenant</span><span class="p">);</span>
+</span><span class='line'>                <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">SaveChanges</span><span class="p">();</span>
+</span><span class='line'>                <span class="k">return</span> <span class="n">tenant</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="k">catch</span><span class="p">(</span><span class="n">Exception</span> <span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">exception</span><span class="p">.</span><span class="n">Message</span> <span class="p">+</span> <span class="s">&quot;\n\n&quot;</span> <span class="p">+</span> <span class="n">exception</span><span class="p">.</span><span class="n">StackTrace</span><span class="p">);</span>
+</span><span class='line'>                <span class="k">return</span> <span class="n">tenant</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="n">Tenant</span> <span class="nf">Put</span><span class="p">(</span><span class="n">Guid</span> <span class="n">id</span><span class="p">,</span> <span class="p">[</span><span class="n">FromBody</span><span class="p">]</span><span class="n">Tenant</span> <span class="n">tenant</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="k">try</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="n">Tenant</span> <span class="n">result</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">Tenants</span><span class="p">.</span><span class="n">SingleOrDefault</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">id</span><span class="p">);</span>
+</span><span class='line'>                <span class="n">result</span><span class="p">.</span><span class="n">Code</span> <span class="p">=</span> <span class="n">tenant</span><span class="p">.</span><span class="n">Code</span><span class="p">;</span>
+</span><span class='line'>                <span class="n">result</span><span class="p">.</span><span class="n">Name</span> <span class="p">=</span> <span class="n">tenant</span><span class="p">.</span><span class="n">Name</span><span class="p">;</span>
+</span><span class='line'>                <span class="n">result</span><span class="p">.</span><span class="n">Description</span> <span class="p">=</span> <span class="n">tenant</span><span class="p">.</span><span class="n">Description</span><span class="p">;</span>
+</span><span class='line'>                <span class="n">result</span><span class="p">.</span><span class="n">AccountId</span> <span class="p">=</span> <span class="n">tenant</span><span class="p">.</span><span class="n">AccountId</span><span class="p">;</span>
+</span><span class='line'>                <span class="n">result</span><span class="p">.</span><span class="n">IsActive</span> <span class="p">=</span> <span class="n">tenant</span><span class="p">.</span><span class="n">IsActive</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">SaveChanges</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">exception</span><span class="p">.</span><span class="n">Message</span> <span class="p">+</span> <span class="s">&quot;\n\n&quot;</span> <span class="p">+</span> <span class="n">exception</span><span class="p">.</span><span class="n">StackTrace</span><span class="p">);</span>
+</span><span class='line'>                <span class="k">return</span> <span class="n">tenant</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">bool</span> <span class="nf">Delete</span><span class="p">(</span><span class="n">Guid</span> <span class="n">id</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="k">try</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="n">Tenant</span> <span class="n">tenant</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">Tenants</span><span class="p">.</span><span class="n">SingleOrDefault</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">id</span><span class="p">);</span>
+</span><span class='line'>                <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">Tenants</span><span class="p">.</span><span class="n">Remove</span><span class="p">(</span><span class="n">tenant</span><span class="p">);</span>
+</span><span class='line'>                <span class="k">this</span><span class="p">.</span><span class="n">_context</span><span class="p">.</span><span class="n">SaveChanges</span><span class="p">();</span>
+</span><span class='line'>                <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">exception</span><span class="p">.</span><span class="n">Message</span> <span class="p">+</span> <span class="s">&quot;\n\n&quot;</span> <span class="p">+</span> <span class="n">exception</span><span class="p">.</span><span class="n">StackTrace</span><span class="p">);</span>
+</span><span class='line'>                <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<blockquote> Github qualtrak/RestApiAzure commit:
+<br/>
+<a href="https://github.com/qualtrak/RestApiAzure/commit/6834b452e034b01c2e2abfab7489a3bcb0a48eaf" target="_blank">
+Created Account and Tenant full CRUD REST API Controllers.</a>
+</blockquote>
+
+
+<h2>Running and testing REST API</h2>
+
+<ul>
+<li>Debug and start the application (F5).</li>
+<li>Use browser, fiddler or in my case Chrome extension Rest Console to test the API:</li>
+<li>Set <em>Request URI</em>:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="n">http</span><span class="p">:</span><span class="c1">//localhost:16826/api/accounts</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Set <em>Content-Type</em>:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="n">application</span><span class="p">/</span><span class="n">json</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Run by clicking <em>GET</em> or <em>Send</em>. The output should be something like this:</li>
+</ul>
+
+
+<p><img src="http://qualtrak.github.com/images/01-08.png"></p>
+
+<ul>
+<li>Incidentally, it is encouraged to try and test all the Account and Tenant methods.</li>
+</ul>
+
+
+<h2>Conclusion</h2>
+
+<p>This long tutorial provides a knowledge to create a simple REST API and use SQL Azure as
+database to connect to.</p>
+
+<p>In second part, the deployment of applicatin will be provided as <em>Web Role</em> in Azure <em>Cloud Services</em>.</p>
 <div class='octopress-authorbox'>
 	<div class="author-pic">
 		<img src="http://www.gravatar.com/avatar/4e0d581521137646abac17331917e95e" alt="Kornelije Sajler" />

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: SQL Server | The QCoach Dev Notes]]></title>
   <link href="http://qualtrak.github.com/blog/categories/sql-server/atom.xml" rel="self"/>
   <link href="http://qualtrak.github.com/"/>
-  <updated>2012-10-15T02:09:13+02:00</updated>
+  <updated>2012-10-15T19:24:13+02:00</updated>
   <id>http://qualtrak.github.com/</id>
   <author>
     <name><![CDATA[Kornelije Sajler]]></name>
@@ -18,7 +18,15 @@
     <link href="http://qualtrak.github.com/blog/2012/10/12/connecting-the-asp-dot-net-web-api-with-sql-azure/"/>
     <updated>2012-10-12T17:56:00+02:00</updated>
     <id>http://qualtrak.github.com/blog/2012/10/12/connecting-the-asp-dot-net-web-api-with-sql-azure</id>
-    <content type="html"><![CDATA[<h2>Creating SQL Azure</h2>
+    <content type="html"><![CDATA[<p>The step-by-step creation of ASP.NET MVC Web Api  <em>RestApiAzure</em> application.</p>
+
+<p>The full code is hosted on github as <a href="https://github.com/qualtrak/RestApiAzure">qualtrak/RestApiAzure</a>.
+Each commited step will be as note and link to particular changeset.</p>
+
+<p>This is mostly learning by doing process so comments, suggestions, different opinions, and
+code reviews for Github commits are very welcome!</p>
+
+<h2>Creating SQL Azure</h2>
 
 <ol>
 <li>Login to a <a href="https://manage.windowsazure.com">Windows Azure Portal</a>.</li>
@@ -31,7 +39,7 @@
 <li>Specify <code>edition</code>: <em>Web</em> or <em>Business</em>.</li>
 <li>Specify <code>limit database size</code> depending on edition (affects billing).</li>
 <li>Specify <code>collation</code> or leave default.</li>
-<li><p>Specify <code>server</code>: existing or creta new one.</p>
+<li><p>Specify <code>server</code>: existing or create new one.</p>
 
 <p><img src="/images/01-01.png"></p></li>
 </ul>
@@ -42,12 +50,12 @@
 <h2>Configure Allowed IP addresses of SQL Azure</h2>
 
 <p>To properly connect to the SQL Azure from the client (your PC) there is need to add the
-IP address to allowed ip addresses.</p>
+IP address to allowed IP addresses.</p>
 
 <p>In <a href="https://manage.windowsazure.com">Windows Azure Portal</a> <em>SQL databases</em> click the
 <em>Servers</em> link, right below title "<em>sql databases</em>".</p>
 
-<p>From list of <em>Servers</em> click on created or exsting Server that created dtabase is part.
+<p>From list of <em>Servers</em> click on created or existing Server that created database is part.
 In this case it was <code>qh9pkltozj</code> server.</p>
 
 <p><img src="/images/01-02.png"></p>
@@ -59,12 +67,12 @@ with the action <em>add to allowed IP addresses</em>.</p>
 
 <p><img src="/images/01-03.png"></p>
 
-<p>Click action <em>add to allowed IP addresses</em> to gain access to the SQL Azure dataabase(s) on
+<p>Click action <em>add to allowed IP addresses</em> to gain access to the SQL Azure database(s) on
 <code>qh9pkltozj</code> server.</p>
 
-<p>In bottom command menu click <em>Save</em> to save firewal rule.</p>
+<p>In bottom command menu click <em>Save</em> to save firewall rule.</p>
 
-<p>The SQL Azure is now ready to be connected from client (your PC) with SQL Server Mnagement Studio (SSMS)
+<p>The SQL Azure is now ready to be connected from client (your PC) with SQL Server Management Studio (SSMS)
 or via connection string from local application.</p>
 
 <h2>Create ASP.NET MVC Web Api project</h2>
@@ -82,7 +90,7 @@ or via connection string from local application.</p>
 
 
 <p> <img src="/images/01-04.png"></p></li>
-<li>Right-click <code>RestApiAzure</code> in te <em>Solution Explorer</em>, <em>Add</em> | <em>New Project</em>.</li>
+<li>Right-click <code>RestApiAzure</code> in the <em>Solution Explorer</em>, <em>Add</em> | <em>New Project</em>.</li>
 <li>Choose from <em>Visual C#</em> | <em>Web</em> the <em>ASP.NET MVC 4 Web Application</em>:
 
 <ul>
@@ -101,6 +109,475 @@ or via connection string from local application.</p>
 </li>
 </ol>
 
+
+<blockquote> Github qualtrak/RestApiAzure commit:
+<br/>
+<a href="https://github.com/qualtrak/RestApiAzure/commit/ae5d9994a4c5694675f981341b1b6e55cfb3bba5" target="_blank">
+Initial commit. Default empty Web Api solution with README.</a>
+</blockquote>
+
+
+<h2>Create POCO models: Account and Tenant</h2>
+
+<p>The simple two models Account and Tenant (Tenant belongs to Account).</p>
+
+<ul>
+<li>In <code>RestApiWeb.Models</code> create <code>Account.cs</code> class:</li>
+</ul>
+
+
+<p>```csharp
+namespace RestApiWeb.Models
+{</p>
+
+<pre><code>using System;
+
+public class Account
+{
+    public Guid Id { get; set; }
+
+    public string Name { get; set; }
+
+    public string Email { get; set; }
+
+    public bool IsActive { get; set; }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<ul>
+<li>In <code>RestApiWeb.Models</code> create <code>Tenant.cs</code> class:</li>
+</ul>
+
+
+<p>```csharp
+namespace RestApiWeb.Models
+{</p>
+
+<pre><code>using System;
+
+public class Tenant
+{
+    public Guid Id { get; set; }
+
+    public int Code { get; set; }
+
+    public string Name { get; set; }
+
+    public string Description { get; set; }
+
+    public bool IsActive { get; set; }
+
+    public Guid AccountId { get; set; }
+
+    public Account Account { get; set; }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<blockquote> Github qualtrak/RestApiAzure commit:
+<br/>
+<a href="https://github.com/qualtrak/RestApiAzure/commit/cdddf56734624342c646c899c369d536891cf4fc" target="_blank">
+Created Models: Account and Tenant.</a>
+</blockquote>
+
+
+<h2>Create the "RestApiAzure" Db Context</h2>
+
+<p>Create <code>RestApiWeb.Context</code> folder and <code>RestApiAzureContext.cs</code> class as a <em>Entity Framework</em>
+<code>DbContext</code>:</p>
+
+<p>```csharp
+namespace RestApiWeb.Context
+{</p>
+
+<pre><code>using RestApiWeb.Models;
+using System.Data.Entity;
+
+public class RestApiAzureContext : DbContext
+{
+    public RestApiAzureContext()
+        : base("RestApiAzure")
+    {
+    }
+
+    public DbSet&lt;Account&gt; Accounts { get; set; }
+
+    public DbSet&lt;Tenant&gt; Tenants { get; set; }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>The connection string name "RestApiAzure" is declared in <code>base</code>. This connection string
+will be created in <code>web.config</code> in next chapter.</p>
+
+<blockquote> Github qualtrak/RestApiAzure commit:
+<br/>
+<a href="https://github.com/qualtrak/RestApiAzure/commit/9994d211bfae7b46c7c929aa879f675abc1a764b" target="_blank">
+Created RestApiAzure Entity Framework Context.</a>
+</blockquote>
+
+
+<h2>Adding SQL Azure connecting string to web.config</h2>
+
+<ul>
+<li>Login to a <a href="https://manage.windowsazure.com">Windows Azure Portal</a>.</li>
+<li>In left pane cluck <em>SQL Database</em>.</li>
+<li>Click the database that you want connection string, in this case <code>qcoach</code> t get details of database.</li>
+<li>From right <em>quick glance</em> sidebar click on <em>Show connection strings</em>.</li>
+</ul>
+
+
+<p><img src="/images/01-06.png"></p>
+
+<ul>
+<li>In Visual Studio project <code>RestApiWeb</code> open <code>web.config</code> and add a  <code>&lt;connectionStrings&gt;</code> named <em>RestApiAzure</em>:</li>
+</ul>
+
+
+<p>```xml
+&lt;add name="RestApiAzure"</p>
+
+<pre><code> providerName="System.Data.SqlClient"
+ connectionString="Server=qh9pkltozj.database.windows.net,1433;Database=qcoach;User ID=xajler@qh9pkltozj;Password=abc123$%;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;"/&gt;
+</code></pre>
+
+<p>```</p>
+
+<blockquote> Github qualtrak/RestApiAzure commit:
+<br/>
+<a href="https://github.com/qualtrak/RestApiAzure/commit/a3c3216d837057613d2d0cee75c7c8bb0beaaaa2" target="_blank">
+Added SQL Azure connection string to web.config.</a>
+</blockquote>
+
+
+<h2>Create Migration for Account and Tenant, added seeded data and create schema</h2>
+
+<ul>
+<li>Open <code>Package Manager Console</code> (<em>View</em> | <em>Other Windows</em>).</li>
+<li>Enable migrations with:</li>
+</ul>
+
+
+<p><code>
+PM&gt; Enable-Migrations
+Checking if the context targets an existing database...
+Code First Migrations enabled for project RestApiWeb.
+</code></p>
+
+<ul>
+<li>There should be new folder <code>RestApiWeb.Migrations</code> with <code>Configuration.cs</code> class and <code>Seed</code> method.</li>
+<li>Replace the default commented code in <code>Seed</code> method with:</li>
+</ul>
+
+
+<p>```csharp
+protected override void Seed(RestApiWeb.Context.RestApiAzureContext context)
+{</p>
+
+<pre><code>Account account = new Account { Id = Guid.NewGuid(), Name = "Account One", Email = "xajler@gmail.com", IsActive = true };
+
+context.Accounts.AddOrUpdate(account);
+
+context.Tenants.AddOrUpdate(
+    new Tenant { Id = Guid.NewGuid(), Code = 1000, Name = "Tenant 1000", Description = "The Tenant Thousand", Account = account }
+);
+</code></pre>
+
+<p>}
+```</p>
+
+<ul>
+<li>To <code>Seed</code> you'll need the <code>using RestApiWeb.Models;</code> for Account and Tenant medel.</li>
+<li>If there is no <em>Initial Migration</em> created. Create migrations for Account and Tenant.</li>
+<li>In <code>Package Manager Console</code> start command to create Account and Tenant migration:</li>
+</ul>
+
+
+<p><code>
+PM&gt; Add-Migration InitialCreate
+Scaffolding migration 'InitialCreate'.
+The Designer Code for this migration file includes a snapshot of your current Code First model. This snapshot is used to calculate the changes to your model when you scaffold the next migration. If you make additional changes to your model that you want to include in this migration, then you can re-scaffold it by running 'Add-Migration 201210151549095_InitialCreate' again.
+</code></p>
+
+<ul>
+<li>In Migration folder now it should be a <code>201210151549095_InitialCreate.cs</code> migration file.</li>
+<li>In <code>Package Manager Console</code> run:</li>
+</ul>
+
+
+<p><code>
+PM&gt; Update-Database
+Specify the '-Verbose' flag to view the SQL statements being applied to the target database.
+Applying code-based migrations: [201210151549095_InitialCreate].
+Applying code-based migration: 201210151549095_InitialCreate.
+Running Seed method.
+</code>
+* Connect with SQL Server Management Studio to SQL Azure and you should get Accounts and Tenants tables.</p>
+
+<p><img src="/images/01-07.png"></p>
+
+<blockquote> Github qualtrak/RestApiAzure commit:
+<br/>
+<a href="https://github.com/qualtrak/RestApiAzure/commit/7a345c8be4602d0bcbb49444259189adcfb8b886" target="_blank">
+Enabled Migrations and created initial Migration with Seeded data.</a>
+</blockquote>
+
+
+<h2>Creating Wep Api Controllers</h2>
+
+<p>We will create full CRUD (Create-Read-Update-Delete) api for Accounts and Tenants resources.</p>
+
+<p><strong>Please note that you should never ever want have this kind of code in real application, this
+code is created only to test the Azure Cloud Services, and have as less as possible business
+logic and layer abstractions!!!</strong></p>
+
+<ul>
+<li><p>First delete the created by web api <code>Controllers.ValuesController.cs</code>.</p></li>
+<li><p>Create in <code>Controllers</code> folder the <code>AccountsController</code> and add the code:</p></li>
+</ul>
+
+
+<p>```csharp
+namespace RestApiWeb.Controllers
+{</p>
+
+<pre><code>using RestApiWeb.Context;
+using RestApiWeb.Models;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Web.Http;
+
+public class AccountsController : ApiController
+{
+    private readonly RestApiAzureContext _context;
+
+    public AccountsController()
+    {
+        this._context = new RestApiAzureContext();
+    }
+
+    public IEnumerable&lt;Account&gt; Get()
+    {
+        ICollection&lt;Account&gt; result = this._context.Accounts.ToList();
+        return result;
+    }
+
+    public Account Get(Guid id)
+    {
+        Account result = this._context.Accounts.SingleOrDefault(x =&gt; x.Id == id);
+        return result;
+    }
+
+    public Account Post(Account account)
+    {
+        try
+        {
+            account.Id = Guid.NewGuid();
+            this._context.Accounts.Add(account);
+            this._context.SaveChanges();
+            return account;
+        }
+        catch(Exception exception)
+        {
+            Debug.WriteLine(exception.Message + "\n\n" + exception.StackTrace);
+            return account;
+        }
+    }
+
+    public Account Put(Guid id, [FromBody]Account account)
+    {
+        try
+        {
+            Account result = this._context.Accounts.SingleOrDefault(x =&gt; x.Id == id);
+            result.Name = account.Name;
+            result.Email = account.Email;
+            result.IsActive = account.IsActive;
+
+            this._context.SaveChanges();
+
+            return result;
+        }
+        catch (Exception exception)
+        {
+            Debug.WriteLine(exception.Message + "\n\n" + exception.StackTrace);
+            return account;
+        }
+    }
+
+    public bool Delete(Guid id)
+    {
+        try
+        {
+            Account account = this._context.Accounts.SingleOrDefault(x =&gt; x.Id == id);
+            this._context.Accounts.Remove(account);
+            this._context.SaveChanges();
+            return true;
+        }
+        catch (Exception exception)
+        {
+            Debug.WriteLine(exception.Message + "\n\n" + exception.StackTrace);
+            return false;
+        }
+    }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<ul>
+<li>Create in <code>Controllers</code> folder the <code>TenantsController</code> and add the code:</li>
+</ul>
+
+
+<p>```csharp
+namespace RestApiWeb.Controllers
+{</p>
+
+<pre><code>using RestApiWeb.Context;
+using RestApiWeb.Models;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Web.Http;
+
+public class TenantsController : ApiController
+{
+    private readonly RestApiAzureContext _context;
+
+    public TenantsController()
+    {
+        this._context = new RestApiAzureContext();
+    }
+
+    public IEnumerable&lt;Tenant&gt; Get()
+    {
+        ICollection&lt;Tenant&gt; result = this._context.Tenants.ToList();
+        return result;
+    }
+
+    public Tenant Get(Guid id)
+    {
+        Tenant result = this._context.Tenants.SingleOrDefault(x =&gt; x.Id == id);
+        return result;
+    }
+
+    public Tenant Post(Tenant tenant)
+    {
+        try
+        {
+            tenant.Id = Guid.NewGuid();
+            this._context.Tenants.Add(tenant);
+            this._context.SaveChanges();
+            return tenant;
+        }
+        catch(Exception exception)
+        {
+            Debug.WriteLine(exception.Message + "\n\n" + exception.StackTrace);
+            return tenant;
+        }
+    }
+
+    public Tenant Put(Guid id, [FromBody]Tenant tenant)
+    {
+        try
+        {
+            Tenant result = this._context.Tenants.SingleOrDefault(x =&gt; x.Id == id);
+            result.Code = tenant.Code;
+            result.Name = tenant.Name;
+            result.Description = tenant.Description;
+            result.AccountId = tenant.AccountId;
+            result.IsActive = tenant.IsActive;
+
+            this._context.SaveChanges();
+
+            return result;
+        }
+        catch (Exception exception)
+        {
+            Debug.WriteLine(exception.Message + "\n\n" + exception.StackTrace);
+            return tenant;
+        }
+    }
+
+    public bool Delete(Guid id)
+    {
+        try
+        {
+            Tenant tenant = this._context.Tenants.SingleOrDefault(x =&gt; x.Id == id);
+            this._context.Tenants.Remove(tenant);
+            this._context.SaveChanges();
+            return true;
+        }
+        catch (Exception exception)
+        {
+            Debug.WriteLine(exception.Message + "\n\n" + exception.StackTrace);
+            return false;
+        }
+    }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<blockquote> Github qualtrak/RestApiAzure commit:
+<br/>
+<a href="https://github.com/qualtrak/RestApiAzure/commit/6834b452e034b01c2e2abfab7489a3bcb0a48eaf" target="_blank">
+Created Account and Tenant full CRUD REST API Controllers.</a>
+</blockquote>
+
+
+<h2>Running and testing REST API</h2>
+
+<ul>
+<li>Debug and start the application (F5).</li>
+<li>Use browser, fiddler or in my case Chrome extension Rest Console to test the API:</li>
+<li>Set <em>Request URI</em>:</li>
+</ul>
+
+
+<p><code>
+http://localhost:16826/api/accounts
+</code></p>
+
+<ul>
+<li>Set <em>Content-Type</em>:</li>
+</ul>
+
+
+<p><code>
+application/json
+</code></p>
+
+<ul>
+<li>Run by clicking <em>GET</em> or <em>Send</em>. The output should be something like this:</li>
+</ul>
+
+
+<p><img src="/images/01-08.png"></p>
+
+<ul>
+<li>Incidentally, it is encouraged to try and test all the Account and Tenant methods.</li>
+</ul>
+
+
+<h2>Conclusion</h2>
+
+<p>This long tutorial provides a knowledge to create a simple REST API and use SQL Azure as
+database to connect to.</p>
+
+<p>In second part, the deployment of applicatin will be provided as <em>Web Role</em> in Azure <em>Cloud Services</em>.</p>
 ]]></content>
   </entry>
   
