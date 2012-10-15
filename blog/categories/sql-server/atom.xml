@@ -4,7 +4,7 @@
   <title><![CDATA[Category: SQL Server | The QCoach Dev Notes]]></title>
   <link href="http://qualtrak.github.com/blog/categories/sql-server/atom.xml" rel="self"/>
   <link href="http://qualtrak.github.com/"/>
-  <updated>2012-10-15T00:27:01+02:00</updated>
+  <updated>2012-10-15T02:09:13+02:00</updated>
   <id>http://qualtrak.github.com/</id>
   <author>
     <name><![CDATA[Kornelije Sajler]]></name>
@@ -31,9 +31,72 @@
 <li>Specify <code>edition</code>: <em>Web</em> or <em>Business</em>.</li>
 <li>Specify <code>limit database size</code> depending on edition (affects billing).</li>
 <li>Specify <code>collation</code> or leave default.</li>
-<li><p>Specify <code>sorver</code>: existing or creta new one.</p>
+<li><p>Specify <code>server</code>: existing or creta new one.</p>
 
 <p><img src="/images/01-01.png"></p></li>
+</ul>
+</li>
+</ol>
+
+
+<h2>Configure Allowed IP addresses of SQL Azure</h2>
+
+<p>To properly connect to the SQL Azure from the client (your PC) there is need to add the
+IP address to allowed ip addresses.</p>
+
+<p>In <a href="https://manage.windowsazure.com">Windows Azure Portal</a> <em>SQL databases</em> click the
+<em>Servers</em> link, right below title "<em>sql databases</em>".</p>
+
+<p>From list of <em>Servers</em> click on created or exsting Server that created dtabase is part.
+In this case it was <code>qh9pkltozj</code> server.</p>
+
+<p><img src="/images/01-02.png"></p>
+
+<p>Now in <code>qh9pkltozj</code> server click the <em>Configure</em> link, below <em>qh9pkltozj</em> server title.</p>
+
+<p>In <em>allowed ip addresses</em>, by default, if the client IP address is not allowed will be displayed
+with the action <em>add to allowed IP addresses</em>.</p>
+
+<p><img src="/images/01-03.png"></p>
+
+<p>Click action <em>add to allowed IP addresses</em> to gain access to the SQL Azure dataabase(s) on
+<code>qh9pkltozj</code> server.</p>
+
+<p>In bottom command menu click <em>Save</em> to save firewal rule.</p>
+
+<p>The SQL Azure is now ready to be connected from client (your PC) with SQL Server Mnagement Studio (SSMS)
+or via connection string from local application.</p>
+
+<h2>Create ASP.NET MVC Web Api project</h2>
+
+<ol>
+<li>Open Visual Studio 2012 (or 2010).</li>
+<li><em>File</em> | <em>Create New Project</em> (Ctrl+Shift+n)</li>
+<li>Choose from <em>Other Project Types</em> | <em>Visual Studio Solutions</em> the <em>Blank Solutions</em>:
+
+<ul>
+<li>For solution <em>Name</em> enter <code>RestApiAzure</code>.</li>
+<li>For <em>Location</em> enter <code>c:\source</code>.</li>
+<li>Click <em>OK</em> to confirm.</li>
+</ul>
+
+
+<p> <img src="/images/01-04.png"></p></li>
+<li>Right-click <code>RestApiAzure</code> in te <em>Solution Explorer</em>, <em>Add</em> | <em>New Project</em>.</li>
+<li>Choose from <em>Visual C#</em> | <em>Web</em> the <em>ASP.NET MVC 4 Web Application</em>:
+
+<ul>
+<li>For project <em>Name</em> enter <code>RestApiWeb</code>.</li>
+<li>For <em>Location</em> enter leave default (<code>c:\source\RestApiAzure</code>).</li>
+<li>Click <em>OK</em> to confirm.</li>
+</ul>
+
+
+<p> <img src="/images/01-05.png"></p>
+
+<ul>
+<li>In <em>New ASP.NET MVC Project</em> choose <em>Web API</em> template.</li>
+<li>Click <em>OK</em> to confirm.</li>
 </ul>
 </li>
 </ol>
