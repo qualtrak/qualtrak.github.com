@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ASP.NET, | The QCoach Dev Notes]]></title>
   <link href="http://qualtrak.github.com/categories/asp-net-/atom.xml" rel="self"/>
   <link href="http://qualtrak.github.com/"/>
-  <updated>2012-10-17T12:25:09+02:00</updated>
+  <updated>2012-10-17T12:43:06+02:00</updated>
   <id>http://qualtrak.github.com/</id>
   <author>
     <name><![CDATA[Kornelije Sajler]]></name>
@@ -115,6 +115,15 @@ http://qcoach.cloudapp.net/api/accounts
 </code></p>
 
 <p>It should work on Azure as it was locally!</p>
+
+<blockquote> Github qualtrak/RestApiAzure commit:
+<br/>
+<a href="https://github.com/qualtrak/RestApiAzure/commit/30e8cbdc9603f859b7a6d888a8d7bc6002a8fe3b" target="_blank">
+Added Azure Publish project and publishing is setup.</a>
+</blockquote>
+
+
+
 ]]></content>
   </entry>
   
