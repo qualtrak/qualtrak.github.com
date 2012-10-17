@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Web | The QCoach Dev Notes]]></title>
+  <link href="http://qualtrak.github.com/categories/web/atom.xml" rel="self"/>
+  <link href="http://qualtrak.github.com/"/>
+  <updated>2012-10-17T12:25:09+02:00</updated>
+  <id>http://qualtrak.github.com/</id>
+  <author>
+    <name><![CDATA[Kornelije Sajler]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Deploying Web Api application to the Azure Cloud Service]]></title>
+    <link href="http://qualtrak.github.com/2012/10/16/deploying-web-api-application-to-the-azure-cloud-service/"/>
+    <updated>2012-10-16T12:25:00+02:00</updated>
+    <id>http://qualtrak.github.com/2012/10/16/deploying-web-api-application-to-the-azure-cloud-service</id>
+    <content type="html"><![CDATA[<p>After the simple application is created and the database is connected to <em>SQL Azure</em> now
+comes a part to deploy it. There are two ways to deploy it to a <em>Azure Cloud</em>:</p>
+
+<ul>
+<li>Web Site Application</li>
+<li>Cloud Service - Web Role Application</li>
+</ul>
+
+
+<p>We shall deploy it as the Cloud Service - Web Role application.</p>
+
+<h2>Add web app to Windows Azure Cloud Service Project</h2>
+
+<ul>
+<li>Open the <code>RestApiAzure</code> solution.</li>
+<li>Right-click on <code>RestApiWeb</code> project in <em>Solution Explorer</em> and from context menu
+click <code>Add Windows Azure Cloud Service Project</code>.</li>
+<li>The <code>RestApiWeb.Azure</code> project will be created and <code>RestApiWeb</code> will get some Azure
+libraries in Reference.</li>
+</ul>
+
+
+<h2>Testing the application by Azure Emulator</h2>
+
+<p>By Running the application (Ctrl+F5) you'll probably get message box saying that Azure
+need elevated permissions to be started.</p>
+
+<p>This was easy to do in Windows 7, right-click the shortcut click <code>Properties</code> and through
+<em>Compatibility</em> tab, but in Windows 8 is hidden away.</p>
+
+<h3>Adding Elevated Permissions to Visual Studio on Windows 8</h3>
+
+<ul>
+<li>Go to <em>C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE</em> and right-click on
+<code>devenv.exe</code>.</li>
+<li>In context menu click <code>Troubleshoot Compatibility</code>.</li>
+<li>In <code>Program Compatibility Troubleshooter</code> click <code>Troubleshoot Program</code>.</li>
+<li>Check the <code>The program requires additional permissions</code>.</li>
+<li>Click two times <code>Next</code> and then click <code>Yes, save these settings for program</code>.</li>
+<li>Click <code>Close the troubleshooter</code>.</li>
+<li>Close and reopen <code>RestApiAzure</code> Visual Studio project.</li>
+<li>Make sure that <code>RestApiWeb.Azure</code> is startup project.</li>
+<li>Run the application with (Ctrl+F5).</li>
+<li>If the Windows Firewall popup click <code>Allow access</code>.</li>
+<li>The application should run and in in system tray should be blue <code>Azure Emulator</code> icon.</li>
+</ul>
+
+
+<h2>Deploy application to Azure</h2>
+
+<ul>
+<li>Right-click <code>RestApiWeb.Azure</code> project in <code>Solution Explorer</code> click <code>Publish</code>.</li>
+</ul>
+
+
+<h3>Getting publishing settings</h3>
+
+<ul>
+<li>Opens <code>Publish Windows Azure Application</code> click <code>Sign in to download credentials</code>,</li>
+<li>Opens Internet Explorer (IE), click <code>Sign in</code> link.</li>
+<li>Enter credentials and click <code>Sign in</code> button.</li>
+<li>IE will prompt to save the publish settings, then save it to some local folder.</li>
+<li>Close IE message to open the file and close IE.</li>
+</ul>
+
+
+<h3>Applying publish settings and Creating Cloud Service</h3>
+
+<ul>
+<li>Return to Visual Studio and in <code>Publish Windows Azure Application</code> click <code>Import</code> button.</li>
+<li>Go to folder where the publishing settings is saved, select it and click <code>Open</code> then <code>Next</code> button.</li>
+<li>In Settings For <code>Cloud Service</code> in dropbox choose <code>&lt;Create New...&gt;</code>. Enter name and choose region. Click <code>OK</code> button.</li>
+<li>Click <code>Next</code> button.</li>
+<li>In Summary click <code>Publish</code> button.</li>
+</ul>
+
+
+<h3>Publishing</h3>
+
+<ul>
+<li>In Visual Studio <code>Windows Azure Activity Log</code> opens.</li>
+<li>Double click <em>Deploying RestApiWeb.Azure to qcoach - Prodution</em> to see more details:</li>
+</ul>
+
+
+<p><img src="/images/02-01.png"></p>
+
+<ul>
+<li>Try the REST API naw with URL</li>
+</ul>
+
+
+<p><code>
+http://qcoach.cloudapp.net/api/accounts
+</code></p>
+
+<p>It should work on Azure as it was locally!</p>
+]]></content>
+  </entry>
+  
+</feed>
